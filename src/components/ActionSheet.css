@@ -5,10 +5,13 @@
   z-index: 200;
   display: flex;
   align-items: flex-end;
-  backdrop-filter: blur(2px);
-  animation: ovin .2s ease;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: ovin .22s ease both;
 }
-@keyframes ovin { from { opacity: 0 } to { opacity: 1 } }
+.sheet-ov.out { animation: ovout .24s ease forwards; }
+@keyframes ovin  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes ovout { to   { opacity: 0 } }
 
 .sheet {
   background: var(--surf);
@@ -17,9 +20,11 @@
   max-height: 90vh;
   overflow-y: auto;
   padding-bottom: env(safe-area-inset-bottom, 0px);
-  animation: sup .28s cubic-bezier(.4,0,.2,1);
+  animation: sup .3s cubic-bezier(.34,1.18,.64,1) both;
 }
-@keyframes sup { from { transform: translateY(100%) } to { transform: translateY(0) } }
+.sheet.out { animation: sdown .24s cubic-bezier(.4,0,1,1) forwards; }
+@keyframes sup   { from { transform: translateY(100%) } to { transform: translateY(0) } }
+@keyframes sdown { to   { transform: translateY(100%) } }
 
 .sheet-handle {
   width: 36px;
@@ -46,9 +51,11 @@
   border: none;
   border-bottom: 1px solid var(--bdr);
   cursor: pointer;
-  transition: background .12s;
+  transition: background .12s, transform .1s;
+  touch-action: manipulation;
 }
-.sheet-row:hover { background: var(--bg); }
+@media (hover: hover) { .sheet-row:hover { background: var(--bg); } }
+.sheet-row:active { background: var(--bg); transform: scale(0.99); }
 .sico {
   width: 40px;
   height: 40px;

@@ -51,10 +51,12 @@
   padding: 12px 14px;
   border-bottom: 1px solid var(--bdr);
   cursor: pointer;
-  transition: background .12s;
+  transition: background .12s, transform .1s;
+  touch-action: manipulation;
 }
 .ctx-row:last-child { border-bottom: none; }
-.ctx-row:active { background: var(--bg); }
+@media (hover: hover) { .ctx-row:hover { background: var(--bg); } }
+.ctx-row:active { background: var(--bg); transform: scale(0.99); }
 .ctx-ico {
   width: 38px; height: 38px; border-radius: 10px;
   display: flex; align-items: center; justify-content: center; flex-shrink: 0;
@@ -84,10 +86,12 @@
   padding: 10px 14px;
   border-bottom: 1px solid var(--bdr);
   cursor: pointer;
-  transition: background .12s;
+  transition: background .12s, transform .1s;
+  touch-action: manipulation;
 }
 .rec-row:last-child { border-bottom: none; }
-.rec-row:active { background: var(--bg); }
+@media (hover: hover) { .rec-row:hover { background: var(--bg); } }
+.rec-row:active { background: var(--bg); transform: scale(0.99); }
 .rec-av {
   width: 42px; height: 42px; border-radius: 50%;
   display: flex; align-items: center; justify-content: center;

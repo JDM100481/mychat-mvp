@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import QRCode from 'qrcode';
 import { useStore } from '../store/useStore';
 import { logout, myUserId } from '../lib/matrix';
 import { IconChevron } from '../components/Icons';
@@ -53,10 +54,28 @@ export default function ProfileScreen() {
   const { userId, setLoggedOut } = useStore();
   const uid = userId || myUserId();
   const [toast, setToast] = useState('');
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    if (!canvasRef.current || !uid) return;
+    QRCode.toCanvas(canvasRef.current, `https://matrix.to/#/${uid}`, {
+      width: 168,
+      margin: 2,
+      color: { dark: '#1C1C1E', light: '#FFFFFF' },
+    }).catch(() => {});
+  }, [uid]);
 
   function showToast(msg) {
     setToast(msg);
     setTimeout(() => setToast(''), 2000);
+  }
+
+  function saveQR() {
+    if (!canvasRef.current) return;
+    const a = document.createElement('a');
+    a.download = `mychat-${shortName(uid)}.png`;
+    a.href = canvasRef.current.toDataURL('image/png');
+    a.click();
   }
 
   function handleSignOut() {
@@ -85,6 +104,20 @@ export default function ProfileScreen() {
           </div>
         </div>
 
+        {/* QR Code */}
+        <div className="prof-qr-card">
+          <div className="prof-qr-canvas-wrap">
+            <canvas ref={canvasRef} className="prof-qr-canvas" />
+          </div>
+          <p className="prof-qr-hint">
+            People can scan this code to connect with you on myCHAT.
+          </p>
+          <button className="prof-qr-btn" onClick={saveQR}>
+            Save QR Code
+          </button>
+        </div>
+
+        {/* Settings */}
         {SETTINGS.map(s => (
           <div key={s.section} className="prof-section">
             <div className="prof-sec-label">{s.section}</div>

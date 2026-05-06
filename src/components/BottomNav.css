@@ -25,6 +25,8 @@
 .ntab svg { width: 24px; height: 24px; }
 .ntab span { font-size: 9px; font-weight: 500; color: var(--t3); }
 .ntab.active span { color: var(--p); }
+.ntab:active { transform: scale(0.88); }
+.ntab { transition: transform .12s cubic-bezier(.34,1.4,.64,1); }
 .nfab {
   width: 48px;
   height: 48px;

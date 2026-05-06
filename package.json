@@ -11,9 +11,13 @@
   },
   "dependencies": {
     "matrix-js-sdk": "^41.5.0-rc.0",
+    "qrcode": "^1.5.4",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
     "zustand": "^5.0.13"
+  },
+  "engines": {
+    "node": "20.x"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

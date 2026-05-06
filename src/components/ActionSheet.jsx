@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useStore } from '../store/useStore';
 import { ACTION_LIST, ACTION_TYPES } from '../lib/actions';
 import './ActionSheet.css';
@@ -19,18 +20,39 @@ const BG = {
 
 export default function ActionSheet() {
   const { sheetOpen, closeSheet, setPendingAction, navigate, activeRoomId } = useStore();
+  const [visible, setVisible] = useState(false);
+  const [out, setOut] = useState(false);
 
-  function pick(type) {
-    setPendingAction({ type });
-    closeSheet();
-    if (!activeRoomId) navigate('chat', null);
+  useEffect(() => {
+    if (sheetOpen) {
+      setOut(false);
+      setVisible(true);
+    } else if (visible) {
+      setOut(true);
+      const t = setTimeout(() => setVisible(false), 240);
+      return () => clearTimeout(t);
+    }
+  }, [sheetOpen]);
+
+  function handleClose() {
+    setOut(true);
+    setTimeout(closeSheet, 230);
   }
 
-  if (!sheetOpen) return null;
+  function pick(type) {
+    setOut(true);
+    setTimeout(() => {
+      setPendingAction({ type });
+      closeSheet();
+      if (!activeRoomId) navigate('chat', null);
+    }, 200);
+  }
+
+  if (!visible) return null;
 
   return (
-    <div className="sheet-ov" onClick={e => e.target === e.currentTarget && closeSheet()}>
-      <div className="sheet">
+    <div className={`sheet-ov${out ? ' out' : ''}`} onClick={e => e.target === e.currentTarget && handleClose()}>
+      <div className={`sheet${out ? ' out' : ''}`}>
         <div className="sheet-handle" />
         <div className="sheet-title">What would you like to do?</div>
         {ACTION_LIST.map(a => {
@@ -47,7 +69,7 @@ export default function ActionSheet() {
             </button>
           );
         })}
-        <button className="sheet-cancel" onClick={closeSheet}>Cancel</button>
+        <button className="sheet-cancel" onClick={handleClose}>Cancel</button>
       </div>
     </div>
   );
