@@ -1,0 +1,206 @@
+.tmod-ov {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.48);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  animation: ovin .22s ease both;
+}
+.tmod-ov.out { animation: ovout .24s ease forwards; }
+@keyframes ovin  { from { opacity: 0 } to { opacity: 1 } }
+@keyframes ovout { to   { opacity: 0 } }
+
+.tmod {
+  background: var(--surf);
+  border-radius: 20px 20px 0 0;
+  width: 100%;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  animation: sup .3s cubic-bezier(.34,1.18,.64,1) both;
+}
+.tmod.out { animation: sdown .24s cubic-bezier(.4,0,1,1) forwards; }
+@keyframes sup   { from { transform: translateY(100%) } to { transform: translateY(0) } }
+@keyframes sdown { to   { transform: translateY(100%) } }
+
+.tmod-handle {
+  width: 36px;
+  height: 4px;
+  background: var(--bdr2);
+  border-radius: 2px;
+  margin: 10px auto 16px;
+}
+
+/* Header */
+.tmod-hdr {
+  padding: 0 20px 16px;
+  border-bottom: 1px solid var(--bdr);
+  margin-bottom: 20px;
+}
+.tmod-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--t1);
+  letter-spacing: -.02em;
+}
+.tmod-to {
+  font-size: 13px;
+  color: var(--t3);
+  margin-top: 3px;
+}
+.tmod-to strong { color: var(--t1); font-weight: 600; }
+
+/* Relationship picker */
+.tmod-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--t3);
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  padding: 0 20px;
+  margin-bottom: 10px;
+}
+
+.tmod-rels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 0 20px;
+  margin-bottom: 22px;
+}
+
+.tmod-rel {
+  padding: 11px 8px;
+  border-radius: 12px;
+  border: 1.5px solid var(--bdr);
+  background: var(--surf);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--t2);
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all .15s;
+  touch-action: manipulation;
+  text-align: center;
+}
+
+.tmod-rel:active { transform: scale(0.96); }
+
+.tmod-rel.active {
+  background: #1C1C1E;
+  color: #fff;
+  border-color: #1C1C1E;
+}
+
+/* Action buttons */
+.tmod-actions {
+  padding: 0 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.tmod-send {
+  width: 100%;
+  padding: 14px;
+  background: var(--p);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background .15s, transform .12s, opacity .15s;
+  touch-action: manipulation;
+}
+.tmod-send:active  { transform: scale(0.97); background: var(--pd); }
+.tmod-send.disabled { opacity: .45; cursor: default; }
+
+.tmod-cancel {
+  width: 100%;
+  padding: 13px;
+  background: var(--bg);
+  color: var(--t2);
+  border: none;
+  border-radius: 13px;
+  font-size: 15px;
+  font-weight: 500;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background .12s, transform .1s;
+  touch-action: manipulation;
+}
+.tmod-cancel:active { background: var(--bdr); transform: scale(0.97); }
+
+/* Sent / confirmation state */
+.tmod-sent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 8px 20px 24px;
+  text-align: center;
+}
+
+.tmod-sent-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: var(--gbg);
+  border: 2px solid #34C759;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  animation: pop-in .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+.tmod-sent-icon svg { width: 26px; height: 26px; }
+
+@keyframes pop-in {
+  from { transform: scale(0.5); opacity: 0 }
+  to   { transform: scale(1);   opacity: 1 }
+}
+
+.tmod-sent-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--t1);
+  letter-spacing: -.02em;
+  margin-bottom: 6px;
+}
+
+.tmod-sent-sub {
+  font-size: 13px;
+  color: var(--t3);
+  line-height: 1.5;
+  margin-bottom: 16px;
+  max-width: 220px;
+}
+
+.tmod-sent-badge {
+  background: var(--obg);
+  color: var(--orange);
+  border: 1px solid #FF950033;
+  border-radius: 20px;
+  padding: 5px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.tmod-done {
+  width: 100%;
+  padding: 14px;
+  background: var(--p);
+  color: #fff;
+  border: none;
+  border-radius: 13px;
+  font-size: 15px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background .15s, transform .12s;
+  touch-action: manipulation;
+}
+.tmod-done:active { background: var(--pd); transform: scale(0.97); }

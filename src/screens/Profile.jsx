@@ -51,7 +51,7 @@ const SETTINGS = [
 ];
 
 export default function ProfileScreen() {
-  const { userId, setLoggedOut } = useStore();
+  const { userId, setLoggedOut, navigate } = useStore();
   const uid = userId || myUserId();
   const [toast, setToast] = useState('');
   const canvasRef = useRef(null);
@@ -115,6 +115,24 @@ export default function ProfileScreen() {
           <button className="prof-qr-btn" onClick={saveQR}>
             Save QR Code
           </button>
+        </div>
+
+        {/* Community */}
+        <div className="prof-section">
+          <div className="prof-sec-label">Community</div>
+          <div className="prof-card">
+            <button
+              className="prof-row"
+              onClick={() => navigate('trust-graph')}
+            >
+              <span className="prof-row-icon">🔗</span>
+              <div className="prof-row-info">
+                <span className="prof-row-label">Trust Graph</span>
+                <span className="prof-row-sub">Verified people and Circles</span>
+              </div>
+              <div className="prof-row-right"><IconChevron /></div>
+            </button>
+          </div>
         </div>
 
         {/* Settings */}
