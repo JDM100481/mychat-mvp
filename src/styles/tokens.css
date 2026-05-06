@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Brand */
+  --p:        #1877F2;
+  --pd:       #0d63d9;
+  --pbg:      #e8f0fd;
+  --pxlt:     #f0f5fe;
+
+  /* Status */
+  --green:    #34C759; --gbg: #e9f9ee;
+  --orange:   #FF9500; --obg: #fff4e5;
+  --red:      #FF3B30; --rbg: #ffeeed;
+  --purple:   #AF52DE; --purpbg: #f7effe;
+  --teal:     #32ADE6;
+
+  /* Text */
+  --t1:    #1C1C1E;
+  --t2:    #3A3A3C;
+  --t3:    #8E8E93;
+  --t4:    #C7C7CC;
+
+  /* Surface */
+  --bg:    #F2F2F7;
+  --surf:  #FFFFFF;
+  --bdr:   #E5E5EA;
+  --bdr2:  #C7C7CC;
+
+  /* Typography */
+  --font:  'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono:  'DM Mono', monospace;
+
+  /* Spacing */
+  --r-sm:  10px;
+  --r-md:  14px;
+  --r-lg:  18px;
+  --r-xl:  24px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root {
+  height: 100%;
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--t1);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+button {
+  font-family: var(--font);
+  cursor: pointer;
+  border: none;
+  background: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+}
+input, textarea { font-family: var(--font); touch-action: manipulation; }
+a { color: inherit; text-decoration: none; }
+svg { display: block; }

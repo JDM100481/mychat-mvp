@@ -1,0 +1,142 @@
+.acard {
+  background: var(--surf);
+  border: 1px solid var(--bdr);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  max-width: 92%;
+  align-self: flex-start;
+  animation: mi .2s ease both;
+}
+.acard.own { align-self: flex-end; }
+
+@keyframes mi { from { opacity:0; transform:translateY(8px) } to { opacity:1; transform:translateY(0) } }
+
+.ac-title-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 14px 8px;
+}
+.ac-type-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+.ac-type-lbl { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; font-family: var(--mono); }
+
+.ac-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--t1);
+  padding: 0 14px 10px;
+  border-bottom: 1px solid var(--bg);
+}
+
+.ac-field {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--bg);
+}
+.ac-fl { font-size: 11px; color: var(--t3); font-weight: 500; margin-bottom: 4px; }
+.ac-fv { display: flex; align-items: center; gap: 8px; }
+.ac-av { width: 22px; height: 22px; border-radius: 50%; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.ac-fv-name { font-size: 13px; font-weight: 600; color: var(--t1); }
+.ac-fv-sub { font-size: 11px; color: var(--t3); margin-top: 1px; }
+.ac-amount { font-size: 26px; font-weight: 700; color: var(--t1); letter-spacing: -.03em; font-family: var(--mono); }
+.ac-note { font-size: 13px; color: var(--t2); }
+
+.ac-status-row { padding: 8px 14px 4px; }
+.ac-badge {
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--mono);
+  letter-spacing: .06em;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.ac-btns { padding: 10px 14px 14px; display: flex; flex-direction: column; gap: 7px; }
+.ac-confirm {
+  width: 100%;
+  background: var(--p);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background .15s;
+}
+.ac-confirm:hover { background: var(--pd); }
+.ac-confirm:disabled { opacity: .65; }
+.ac-cancel {
+  width: 100%;
+  background: none;
+  border: 1px solid var(--bdr);
+  border-radius: 12px;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--t3);
+  font-family: var(--font);
+  cursor: pointer;
+}
+
+.ac-confirmed-state {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px 14px;
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 500;
+}
+.ac-check-circle {
+  width: 22px;
+  height: 22px;
+  background: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.ac-check-circle svg { width: 13px; height: 13px; }
+.ac-declined-state { padding: 10px 14px 14px; font-size: 12px; color: var(--red); font-weight: 500; }
+
+/* RECEIPT */
+.rcpt {
+  background: var(--surf);
+  border: 1px solid rgba(52,199,89,.2);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,.06);
+  max-width: 92%;
+  padding: 16px 14px 12px;
+  animation: mi .25s ease both;
+}
+.rcpt-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--bg);
+  margin-bottom: 12px;
+}
+.rcpt-circle {
+  width: 44px;
+  height: 44px;
+  background: var(--green);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rcpt-circle svg { width: 22px; height: 22px; }
+.rcpt-label { font-size: 14px; font-weight: 700; color: var(--t1); }
+.rcpt-amount { font-size: 28px; font-weight: 700; color: var(--t1); font-family: var(--mono); letter-spacing: -.03em; text-align: center; margin-bottom: 10px; }
+.rcpt-rows { display: flex; flex-direction: column; gap: 6px; }
+.rcpt-row { display: flex; justify-content: space-between; }
+.rcpt-rl { font-size: 11px; color: var(--t3); }
+.rcpt-rv { font-size: 11px; font-weight: 600; color: var(--t2); font-family: var(--mono); }
+.rcpt-ref { font-size: 10px; color: var(--p); font-family: var(--mono); margin-top: 10px; text-align: center; letter-spacing: .06em; }
+.rcpt-ts { font-size: 10px; color: var(--t3); text-align: center; margin-top: 4px; }
