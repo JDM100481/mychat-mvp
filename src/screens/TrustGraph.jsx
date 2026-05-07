@@ -34,7 +34,7 @@ export default function TrustGraphScreen() {
     <div className="tg-screen">
       <div className="tg-hdr">
         <button className="tg-back" onClick={goBack}><IconBack /></button>
-        <span className="tg-title">Trust Graph</span>
+        <span className="tg-title">Community Graph</span>
       </div>
 
       <div className="tg-body">

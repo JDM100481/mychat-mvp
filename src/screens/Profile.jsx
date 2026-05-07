@@ -3,6 +3,8 @@ import QRCode from 'qrcode';
 import { useStore } from '../store/useStore';
 import { logout, myUserId } from '../lib/matrix';
 import { IconChevron } from '../components/Icons';
+import QRScanModal from '../components/QRScanModal';
+import TrustModal from '../components/TrustModal';
 import './Profile.css';
 
 function initial(userId) {
@@ -54,6 +56,8 @@ export default function ProfileScreen() {
   const { userId, setLoggedOut, navigate } = useStore();
   const uid = userId || myUserId();
   const [toast, setToast] = useState('');
+  const [scanOpen, setScanOpen] = useState(false);
+  const [trustOpen, setTrustOpen] = useState(false);
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -76,6 +80,23 @@ export default function ProfileScreen() {
     a.download = `mychat-${shortName(uid)}.png`;
     a.href = canvasRef.current.toDataURL('image/png');
     a.click();
+  }
+
+  function shareQR() {
+    if (!canvasRef.current) return;
+    canvasRef.current.toBlob(blob => {
+      if (navigator.share && blob) {
+        const file = new File([blob], 'mychat-qr.png', { type: 'image/png' });
+        navigator.share({ title: 'QR-Connect', files: [file] }).catch(() => {});
+      } else {
+        showToast('Share not supported on this browser');
+      }
+    });
+  }
+
+  function handleScanSendTrust() {
+    setScanOpen(false);
+    setTimeout(() => setTrustOpen(true), 260);
   }
 
   function handleSignOut() {
@@ -104,17 +125,24 @@ export default function ProfileScreen() {
           </div>
         </div>
 
-        {/* QR Code */}
-        <div className="prof-qr-card">
-          <div className="prof-qr-canvas-wrap">
-            <canvas ref={canvasRef} className="prof-qr-canvas" />
+        {/* QR-Connect */}
+        <div className="prof-section">
+          <div className="prof-sec-label">QR-Connect</div>
+          <div className="prof-qr-card">
+            <div className="prof-qr-canvas-wrap">
+              <canvas ref={canvasRef} className="prof-qr-canvas" />
+            </div>
+            <p className="prof-qr-hint">
+              Use QR-Connect to create trusted connections in your Community Graph.
+            </p>
+            <button className="prof-qr-btn" onClick={() => setScanOpen(true)}>
+              Scan QR-Connect
+            </button>
+            <div className="prof-qr-row">
+              <button className="prof-qr-ghost" onClick={shareQR}>Share QR-Connect</button>
+              <button className="prof-qr-ghost" onClick={saveQR}>Save QR</button>
+            </div>
           </div>
-          <p className="prof-qr-hint">
-            People can scan this code to connect with you on myCHAT.
-          </p>
-          <button className="prof-qr-btn" onClick={saveQR}>
-            Save QR Code
-          </button>
         </div>
 
         {/* Community */}
@@ -127,7 +155,7 @@ export default function ProfileScreen() {
             >
               <span className="prof-row-icon">🔗</span>
               <div className="prof-row-info">
-                <span className="prof-row-label">Trust Graph</span>
+                <span className="prof-row-label">Community Graph</span>
                 <span className="prof-row-sub">Verified people and Circles</span>
               </div>
               <div className="prof-row-right"><IconChevron /></div>
@@ -170,6 +198,8 @@ export default function ProfileScreen() {
       </div>
 
       {toast && <div className="prof-toast">{toast}</div>}
+      {scanOpen && <QRScanModal onSendTrust={handleScanSendTrust} onClose={() => setScanOpen(false)} />}
+      {trustOpen && <TrustModal name="Mark" onClose={() => setTrustOpen(false)} />}
     </div>
   );
 }

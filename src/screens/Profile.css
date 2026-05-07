@@ -136,6 +136,36 @@
   background: var(--pd);
 }
 
+/* QR row (Share + Save) */
+.prof-qr-row {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.prof-qr-ghost {
+  flex: 1;
+  padding: 11px 6px;
+  background: var(--bg);
+  color: var(--p);
+  border: 1.5px solid var(--bdr);
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: background .15s, transform .12s;
+  touch-action: manipulation;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.prof-qr-ghost:active {
+  background: var(--bdr);
+  transform: scale(0.97);
+}
+
 /* Settings section */
 .prof-section {
   margin-bottom: 14px;
