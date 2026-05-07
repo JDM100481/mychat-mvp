@@ -9,7 +9,7 @@ import { CirclesScreen, CircleDetailScreen } from './screens/Circles';
 import GeneScreen from './screens/Gene';
 import SearchScreen from './screens/Search';
 import ProfileScreen from './screens/Profile';
-import TrustGraphScreen from './screens/TrustGraph';
+import CommunityGraphScreen from './screens/CommunityGraph';
 
 import BottomNav from './components/BottomNav';
 import ActionSheet from './components/ActionSheet';
@@ -52,7 +52,7 @@ export default function App() {
         {screen === 'mygene'  && <GeneScreen />}
         {screen === 'search'  && <SearchScreen />}
         {screen === 'profile'     && <ProfileScreen />}
-        {screen === 'trust-graph' && <TrustGraphScreen />}
+        {screen === 'trust-graph' && <CommunityGraphScreen />}
       </div>
       {showNav && <BottomNav />}
       <ActionSheet />
