@@ -110,4 +110,7 @@
 .family-member .member-name { font-size: 13px; font-weight: 500; color: var(--t1); }
 .family-member .member-role { font-size: 11px; margin-top: 2px; font-weight: 500; }
 
-.family-role-select { border-color: #E5E7EB; background: var(--surf); }
+.family-member-row { display: flex; align-items: center; gap: 10px; padding: 8px 0; }
+.family-member-row .family-member { flex: 1; display: flex; align-items: center; gap: 10px; }
+
+.family-role-select { padding: 6px 8px; border: 1px solid #E5E7EB; border-radius: 6px; background: var(--surf); color: var(--t1); font-size: 12px; cursor: pointer; font-weight: 500; }
