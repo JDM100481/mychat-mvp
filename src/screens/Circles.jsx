@@ -9,7 +9,10 @@ const BG = ['#e8f0fd','#fde8e8','#e9f8ee','#fff4e5','#f7effe','#ffeeed'];
 function avBg(name) { let h=0; for(const c of (name||'')) h=(h*31+c.charCodeAt(0))%BG.length; return BG[h]; }
 
 export function CirclesScreen() {
-  const { navigate, setActiveRoom, rooms, openSheet } = useStore();
+  const { navigate, setActiveRoom, rooms } = useStore();
+  const [showCreate, setShowCreate] = useState(false);
+  const [circleName, setCircleName] = useState('');
+  
   // Filter to only rooms with more than 2 members (actual groups/circles)
   const circles = rooms.filter(room => room.getJoinedMemberCount?.() > 2);
 
@@ -18,11 +21,20 @@ export function CirclesScreen() {
     navigate('circle', room.roomId);
   }
 
+  function handleCreateCircle() {
+    if (circleName.trim()) {
+      // TODO: Create circle with given name using Matrix SDK
+      console.log('Creating circle:', circleName);
+      setCircleName('');
+      setShowCreate(false);
+    }
+  }
+
   return (
     <div className="circles-screen">
       <div className="std-hdr">
         <div className="std-hdr-title">Circles</div>
-        <button className="std-hdr-plus" onClick={openSheet}><IconPlus color="var(--t3)" size={14} /></button>
+        <button className="std-hdr-plus" onClick={() => setShowCreate(true)}><IconPlus color="var(--t3)" size={14} /></button>
       </div>
       <div className="circles-body">
         {circles.length === 0 && <div className="circles-empty">No Circles yet. Tap + to create one.</div>}
@@ -47,6 +59,33 @@ export function CirclesScreen() {
           );
         })}
       </div>
+
+      {/* Create Circle Modal */}
+      {showCreate && (
+        <div className="modal-overlay" onClick={() => setShowCreate(false)}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Create Circle</h2>
+              <button className="modal-close" onClick={() => setShowCreate(false)}>×</button>
+            </div>
+            <div className="modal-body">
+              <input
+                type="text"
+                placeholder="Circle name (e.g., Family, Work Friends)"
+                value={circleName}
+                onChange={e => setCircleName(e.target.value)}
+                onKeyPress={e => e.key === 'Enter' && handleCreateCircle()}
+                autoFocus
+                className="circle-input"
+              />
+            </div>
+            <div className="modal-footer">
+              <button className="modal-btn-cancel" onClick={() => setShowCreate(false)}>Cancel</button>
+              <button className="modal-btn-create" onClick={handleCreateCircle} disabled={!circleName.trim()}>Create</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
