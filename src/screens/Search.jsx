@@ -7,7 +7,7 @@ import './Gene.css';
 const TABS = ['All','Chats','Records','Notes'];
 
 export default function SearchScreen() {
-  const { goBack, rooms, geneRecords } = useStore();
+  const { goBack, navigate, setActiveRoom, rooms, geneRecords } = useStore();
   const [q, setQ] = useState('');
   const [tab, setTab] = useState('All');
 
@@ -50,7 +50,10 @@ export default function SearchScreen() {
           <>
             <div className="sr-sec">Chats</div>
             {chatResults.map(r => (
-              <div key={r.roomId} className="sr-row">
+              <div key={r.roomId} className="sr-row" onClick={() => {
+                setActiveRoom(r.roomId);
+                navigate('chat', r.roomId);
+              }} style={{ cursor: 'pointer' }}>
                 <div className="sr-ico" style={{ background: 'var(--pbg)' }}>
                   {roomDisplayName(r)[0]?.toUpperCase()}
                 </div>
