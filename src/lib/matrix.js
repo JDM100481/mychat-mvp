@@ -106,3 +106,39 @@ export function isCirclePlus(room) {
 export function getTimeline(room) {
   return room.getLiveTimeline().getEvents();
 }
+
+export async function createCircle(name, userIds = []) {
+  if (!client) throw new Error('Not connected');
+  const roomId = await client.createRoom({
+    name,
+    room_type: 'ph.mychat.circle',
+    initial_state: [
+      {
+        type: 'm.room.join_rules',
+        content: { join_rule: 'invite' },
+      },
+    ],
+    invite: userIds,
+  });
+  return roomId;
+}
+
+export async function addMembersToRoom(roomId, userIds) {
+  if (!client) throw new Error('Not connected');
+  const room = client.getRoom(roomId);
+  if (!room) throw new Error('Room not found');
+  
+  for (const userId of userIds) {
+    try {
+      await client.invite(roomId, userId);
+    } catch (err) {
+      console.error('Failed to invite', userId, err);
+    }
+  }
+}
+
+export async function setRoomMemberRole(roomId, userId, role) {
+  if (!client) throw new Error('Not connected');
+  const powerLevel = role === 'admin' ? 100 : role === 'moderator' ? 50 : 0;
+  return client.setPowerLevelForUser(roomId, userId, powerLevel);
+}
