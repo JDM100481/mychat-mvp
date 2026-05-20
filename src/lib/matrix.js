@@ -15,6 +15,8 @@ export async function login(username, password) {
     userId: res.user_id,
     deviceId: res.device_id,
   });
+  // TODO(security): localStorage is acceptable for the MVP only. Before production,
+  // migrate Matrix session tokens to secure storage with an XSS-resistant auth flow.
   localStorage.setItem('mc_token', res.access_token);
   localStorage.setItem('mc_uid', res.user_id);
   localStorage.setItem('mc_device', res.device_id);

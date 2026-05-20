@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { useStore } from '../store/useStore';
 import { sendMessage, sendActionCard, getClient, myUserId, displayName } from '../lib/matrix';
-import { ACTION_TYPES, formatTime, genRefNo } from '../lib/actions';
+import { ACTION_TYPES, formatTime } from '../lib/actions';
 import { ActionCard, ReceiptCard } from '../components/ActionCard';
 import { IconBack, IconPhone, IconVideo, IconPlus, IconCamera, IconMic, IconEmoji, IconSend } from '../components/Icons';
 import './Chat.css';
@@ -33,7 +33,7 @@ function MsgBubble({ event, isOwn }) {
 }
 
 export default function ChatScreen() {
-  const { screenParam, goBack, messages, pendingAction, setPendingAction, openSheet, appendMessage, saveToGene } = useStore();
+  const { screenParam, goBack, messages, pendingAction, setPendingAction, openSheet, appendMessage } = useStore();
   const roomId = screenParam;
   const client = getClient();
   const room = client?.getRoom(roomId);
@@ -63,8 +63,7 @@ export default function ChatScreen() {
     setSending(true);
     try {
       await sendMessage(roomId, val);
-    } catch (e) {
-      // offline: add local optimistic message
+    } catch {
       appendMessage(roomId, { type: 'm.room.message', content: { msgtype: 'm.text', body: val }, sender: myId, ts: Date.now(), getId: () => null, getType: () => 'm.room.message', getContent: () => ({ msgtype: 'm.text', body: val }), getSender: () => myId, getTs: () => Date.now() });
     }
     setSending(false);
@@ -86,7 +85,7 @@ export default function ChatScreen() {
     if (roomId) {
       try {
         await sendActionCard(roomId, card);
-      } catch (e) {
+      } catch {
         const fakeEvent = {
           type: 'xyz.mychat.action',
           content: { ...card, action_type: card.type, status: 'pending' },
@@ -107,7 +106,6 @@ export default function ChatScreen() {
 
   return (
     <div className="chat-screen">
-      {/* Header */}
       <div className="chat-hdr">
         <button className="chat-back" onClick={goBack}><IconBack /></button>
         <div className="chat-av-sm" style={{ background: '#e8f0fd' }}>
@@ -123,7 +121,6 @@ export default function ChatScreen() {
         </div>
       </div>
 
-      {/* Messages */}
       <div className="chat-body">
         {msgs.length === 0 && (
           <div className="chat-empty">
@@ -138,7 +135,6 @@ export default function ChatScreen() {
         <div ref={bottomRef} />
       </div>
 
-      {/* Action compose form */}
       {showActionForm && meta && (
         <div className="action-form">
           <div className="af-hdr">
@@ -155,7 +151,6 @@ export default function ChatScreen() {
         </div>
       )}
 
-      {/* Input bar */}
       <div className="chat-bar">
         <button className="bar-plus" onClick={openSheet}><IconPlus color="var(--t3)" size={14} /></button>
         <button className="bar-icon"><IconCamera /></button>

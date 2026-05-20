@@ -30,7 +30,12 @@ export function formatAmount(amount, currency = 'PHP') {
   if (!amount && amount !== 0) return '';
   const num = parseFloat(amount);
   if (isNaN(num)) return amount;
-  return `₱${num.toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return num.toLocaleString('en-PH', {
+    style: 'currency',
+    currency,
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 export function formatTime(ts) {

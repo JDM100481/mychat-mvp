@@ -36,7 +36,7 @@ export default function App() {
         console.warn('Session restore failed:', e.message);
       }
     })();
-  }, []);
+  }, [appendMessage, setLoggedIn, setRooms]);
 
   if (!loggedIn) return <LoginScreen />;
 

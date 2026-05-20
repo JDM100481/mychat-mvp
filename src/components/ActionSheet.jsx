@@ -32,7 +32,7 @@ export default function ActionSheet() {
       const t = setTimeout(() => setVisible(false), 240);
       return () => clearTimeout(t);
     }
-  }, [sheetOpen]);
+  }, [sheetOpen, visible]);
 
   function handleClose() {
     setOut(true);

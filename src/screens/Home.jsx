@@ -1,5 +1,5 @@
 import { useStore } from '../store/useStore';
-import { roomDisplayName, isCirclePlus, myUserId } from '../lib/matrix';
+import { roomDisplayName, isCirclePlus } from '../lib/matrix';
 import { formatTime } from '../lib/actions';
 import { IconSearch, IconPlus, IconChevron } from '../components/Icons';
 import './Home.css';

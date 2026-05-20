@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export const useStore = create((set, get) => ({
+export const useStore = create((set) => ({
   // Auth
   userId: localStorage.getItem('mc_uid') || null,
   loggedIn: !!localStorage.getItem('mc_token'),

@@ -3,6 +3,19 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  build: {
+    chunkSizeWarningLimit: 1300,
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined
+          if (id.includes('/react/') || id.includes('/react-dom/')) return 'react'
+          if (id.includes('/matrix-js-sdk/') || id.includes('/@matrix-org/')) return 'matrix'
+          return undefined
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     VitePWA({
