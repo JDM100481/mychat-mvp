@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useStore } from '../store/useStore';
 import { roomDisplayName, isCirclePlus, getClient } from '../lib/matrix';
 import { IconBack, IconPlus, IconChevron } from '../components/Icons';
@@ -20,7 +21,7 @@ export function CirclesScreen() {
     <div className="circles-screen">
       <div className="std-hdr">
         <div className="std-hdr-title">Circles</div>
-        <button className="std-hdr-plus"><IconPlus color="var(--t3)" size={14} /></button>
+        <button className="std-hdr-plus" onClick={() => navigate('chat', null)}><IconPlus color="var(--t3)" size={14} /></button>
       </div>
       <div className="circles-body">
         {circles.length === 0 && <div className="circles-empty">No Circles yet. Create one or join a Circle.</div>}
@@ -80,7 +81,10 @@ export function CircleDetailScreen() {
         <div className="cd-count">{members.length > 0 ? `${members.length} member${members.length !== 1 ? 's' : ''}` : 'Circle'}</div>
         <div className="cd-qa">
           {['Add','Search','Settings'].map(a => (
-            <button key={a} className="qa-btn">
+            <button key={a} className="qa-btn" onClick={() => {
+              if (a === 'Add') navigate('chat', null);
+              else if (a === 'Search') navigate('search');
+            }}>
               <div className="qa-ico">
                 {a === 'Add' && <svg viewBox="0 0 24 24" fill="none" stroke="var(--t2)" strokeWidth="2" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>}
                 {a === 'Search' && <svg viewBox="0 0 24 24" fill="none" stroke="var(--t2)" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>}
@@ -97,13 +101,9 @@ export function CircleDetailScreen() {
         ))}
       </div>
       <div className="cd-body">
-        <div className="cd-placeholder" onClick={openChat}>
-          Tap Chat to open the conversation thread →
-        </div>
+        {tab === 'Chat' && <div className="cd-placeholder" onClick={openChat}>Tap Chat to open the conversation thread →</div>}
+        {tab !== 'Chat' && <div className="cd-placeholder">Content for {tab} coming soon</div>}
       </div>
     </div>
   );
 }
-
-// need useState from react
-import { useState } from 'react';
