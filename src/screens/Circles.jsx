@@ -8,10 +8,31 @@ function av(name) { return (name||'?')[0].toUpperCase(); }
 const BG = ['#e8f0fd','#fde8e8','#e9f8ee','#fff4e5','#f7effe','#ffeeed'];
 function avBg(name) { let h=0; for(const c of (name||'')) h=(h*31+c.charCodeAt(0))%BG.length; return BG[h]; }
 
+const CIRCLE_TYPES = {
+  general: { label: 'General', icon: '👥', roles: ['member', 'moderator', 'admin'] },
+  family: { label: 'Family', icon: '👨‍👩‍👧‍👦', roles: ['father', 'mother', 'son', 'daughter', 'grandfather', 'grandmother', 'uncle', 'aunt', 'cousin', 'sibling', 'spouse', 'child'] },
+};
+
+const FAMILY_ROLE_COLORS = {
+  father: '#3B82F6',
+  mother: '#EC4899',
+  son: '#8B5CF6',
+  daughter: '#D946EF',
+  grandfather: '#1E40AF',
+  grandmother: '#BE185D',
+  uncle: '#6366F1',
+  aunt: '#C2185B',
+  cousin: '#059669',
+  sibling: '#7C3AED',
+  spouse: '#DB2777',
+  child: '#F59E0B',
+};
+
 export function CirclesScreen() {
   const { navigate, setActiveRoom, rooms } = useStore();
   const [showCreate, setShowCreate] = useState(false);
-  const [step, setStep] = useState(1); // 1: name, 2: add members, 3: assign roles
+  const [step, setStep] = useState(1); // 1: type, 2: name, 3: add members, 4: assign roles
+  const [circleType, setCircleType] = useState('general');
   const [circleName, setCircleName] = useState('');
   const [selectedMembers, setSelectedMembers] = useState([]);
   const [memberRoles, setMemberRoles] = useState({});
@@ -49,27 +70,30 @@ export function CirclesScreen() {
 
   async function handleCreateCircle() {
     if (step === 1) {
-      if (circleName.trim()) {
-        setStep(2);
-      }
+      setStep(2);
     } else if (step === 2) {
-      setStep(3);
+      if (circleName.trim()) {
+        setStep(3);
+      }
     } else if (step === 3) {
+      setStep(4);
+    } else if (step === 4) {
       try {
         setLoading(true);
         // Create circle and add members with roles
-        const roomId = await createCircle(circleName, selectedMembers);
-        console.log('Circle created:', roomId);
+        const roomId = await createCircle(`${circleName}${circleType === 'family' ? ' (Family)' : ''}`, selectedMembers);
+        console.log('Circle created:', roomId, 'Type:', circleType);
         
         // Set roles for selected members
         for (const userId of selectedMembers) {
-          const role = memberRoles[userId] || 'member';
-          if (role !== 'member') {
+          const role = memberRoles[userId] || (circleType === 'family' ? 'sibling' : 'member');
+          if (role !== (circleType === 'family' ? 'sibling' : 'member')) {
             await setRoomMemberRole(roomId, userId, role);
           }
         }
         
         // Reset and close
+        setCircleType('general');
         setCircleName('');
         setSelectedMembers([]);
         setMemberRoles({});
@@ -92,6 +116,7 @@ export function CirclesScreen() {
   }
 
   function handleClose() {
+    setCircleType('general');
     setCircleName('');
     setSelectedMembers([]);
     setMemberRoles({});
@@ -135,11 +160,26 @@ export function CirclesScreen() {
           <div className="modal-content" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
               <button className="modal-back" onClick={handleBack}>←</button>
-              <h2>{step === 1 ? 'Circle Name' : step === 2 ? 'Add Members' : 'Assign Roles'}</h2>
+              <h2>{step === 1 ? 'Circle Type' : step === 2 ? 'Circle Name' : step === 3 ? 'Add Members' : 'Assign Roles'}</h2>
               <button className="modal-close" onClick={handleClose}>×</button>
             </div>
             <div className="modal-body">
               {step === 1 && (
+                <div className="circle-type-selector">
+                  {Object.entries(CIRCLE_TYPES).map(([type, config]) => (
+                    <button
+                      key={type}
+                      className={`type-option ${circleType === type ? 'active' : ''}`}
+                      onClick={() => setCircleType(type)}
+                    >
+                      <div className="type-icon">{config.icon}</div>
+                      <div className="type-label">{config.label}</div>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {step === 2 && (
                 <input
                   type="text"
                   placeholder="Circle name (e.g., Family, Work Friends)"
@@ -151,7 +191,7 @@ export function CirclesScreen() {
                 />
               )}
               
-              {step === 2 && (
+              {step === 3 && (
                 <div className="members-picker">
                   <input
                     type="text"
@@ -183,7 +223,7 @@ export function CirclesScreen() {
                 </div>
               )}
               
-              {step === 3 && (
+              {step === 4 && (
                 <div className="role-assign">
                   <div className="circle-info-display">{circleName}</div>
                   {selectedMembers.length === 0 ? (
@@ -192,6 +232,8 @@ export function CirclesScreen() {
                     <div className="roles-list">
                       {selectedMembers.map(userId => {
                         const contact = getMockContacts().find(c => c.userId === userId);
+                        const availableRoles = CIRCLE_TYPES[circleType].roles;
+                        const defaultRole = circleType === 'family' ? 'sibling' : 'member';
                         return (
                           <div key={userId} className="role-row">
                             <div className="role-member">
@@ -201,13 +243,14 @@ export function CirclesScreen() {
                               <div className="role-name">{contact?.name}</div>
                             </div>
                             <select
-                              className="role-select"
-                              value={memberRoles[userId] || 'member'}
+                              className={`role-select ${circleType === 'family' ? 'family-role-select' : ''}`}
+                              value={memberRoles[userId] || defaultRole}
                               onChange={e => setMemberRole(userId, e.target.value)}
+                              style={circleType === 'family' ? { borderColor: FAMILY_ROLE_COLORS[memberRoles[userId] || defaultRole] } : {}}
                             >
-                              <option value="member">Member</option>
-                              <option value="moderator">Moderator</option>
-                              <option value="admin">Admin</option>
+                              {availableRoles.map(role => (
+                                <option key={role} value={role}>{role.charAt(0).toUpperCase() + role.slice(1)}</option>
+                              ))}
                             </select>
                           </div>
                         );
@@ -224,11 +267,11 @@ export function CirclesScreen() {
                 onClick={handleCreateCircle} 
                 disabled={
                   loading ||
-                  (step === 1 && !circleName.trim()) ||
-                  (step === 2 && selectedMembers.length === 0)
+                  (step === 2 && !circleName.trim()) ||
+                  (step === 3 && selectedMembers.length === 0)
                 }
               >
-                {loading ? 'Creating...' : step === 3 ? 'Create Circle' : 'Next'}
+                {loading ? 'Creating...' : step === 4 ? 'Create Circle' : 'Next'}
               </button>
             </div>
           </div>
@@ -255,11 +298,31 @@ export function CircleDetailScreen() {
     navigate('chat', roomId);
   }
 
+  function isCircleFamily() {
+    return name?.includes('(Family)');
+  }
+
   function getMemberRole(member) {
     const powerLevel = member.powerLevel || 0;
+    if (isCircleFamily()) {
+      // For family circles, return the actual role name instead of deriving from power level
+      // This would need to be stored in room state or custom user data
+      return 'sibling'; // Default, would need custom implementation
+    }
     if (powerLevel >= 100) return 'admin';
     if (powerLevel >= 50) return 'moderator';
     return 'member';
+  }
+
+  function getGenerationLevel(role) {
+    const generations = {
+      'grandfather': 0, 'grandmother': 0,
+      'father': 1, 'mother': 1, 'uncle': 1, 'aunt': 1,
+      'sibling': 2, 'spouse': 2,
+      'son': 3, 'daughter': 3, 'cousin': 3,
+      'child': 4,
+    };
+    return generations[role] || 2;
   }
 
   function getMockContacts() {
@@ -343,32 +406,100 @@ export function CircleDetailScreen() {
         {tab === 'Chat' && <div className="cd-placeholder" onClick={openChat}>Tap Chat to open the conversation thread →</div>}
         {tab === 'Members' && (
           <div className="members-list">
-            {members.map((m, i) => {
-              const role = getMemberRole(m);
-              const isCurrentUser = m.userId === myUserId();
-              return (
-                <div key={i} className="member-row">
-                  <div className="member-av" style={{ background: avBg(m.name||m.userId) }}>
-                    {av(m.name||m.userId)}
+            {isCircleFamily() ? (
+              // Family Tree View
+              <div className="family-tree">
+                {['grandfather', 'grandmother', 'father', 'mother', 'uncle', 'aunt'].length > 0 && (
+                  <div className="generation gen-0">
+                    <div className="gen-label">Grandparents</div>
+                    {members.filter(m => ['grandfather', 'grandmother'].some(r => r)).map((m, i) => (
+                      <div key={i} className="family-member">
+                        <div className="member-av" style={{ background: avBg(m.name||m.userId) }}>
+                          {av(m.name||m.userId)}
+                        </div>
+                        <div className="family-member-info">
+                          <div className="member-name">{m.name || m.userId.split(':')[0].replace('@', '')}</div>
+                          <div className="member-role" style={{ color: FAMILY_ROLE_COLORS['grandfather'] }}>Grandparent</div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                  <div className="member-info">
-                    <div className="member-name">{m.name || m.userId.split(':')[0].replace('@', '')}</div>
-                    <div className="member-role">{role}</div>
-                  </div>
-                  {!isCurrentUser && (
-                    <select
-                      className="member-role-select"
-                      value={role}
-                      onChange={e => handleChangeRole(m.userId, e.target.value)}
-                    >
-                      <option value="member">Member</option>
-                      <option value="moderator">Moderator</option>
-                      <option value="admin">Admin</option>
-                    </select>
-                  )}
+                )}
+                
+                <div className="generation gen-1">
+                  <div className="gen-label">Parents & Aunts/Uncles</div>
+                  {members.filter(m => ['father', 'mother', 'uncle', 'aunt'].some(r => r)).map((m, i) => (
+                    <div key={i} className="family-member">
+                      <div className="member-av" style={{ background: avBg(m.name||m.userId) }}>
+                        {av(m.name||m.userId)}
+                      </div>
+                      <div className="family-member-info">
+                        <div className="member-name">{m.name || m.userId.split(':')[0].replace('@', '')}</div>
+                        <div className="member-role" style={{ color: FAMILY_ROLE_COLORS['father'] }}>Parent</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              );
-            })}
+
+                <div className="generation gen-2">
+                  <div className="gen-label">You & Siblings</div>
+                  {members.filter(m => ['sibling', 'spouse'].some(r => r)).map((m, i) => (
+                    <div key={i} className="family-member">
+                      <div className="member-av" style={{ background: avBg(m.name||m.userId) }}>
+                        {av(m.name||m.userId)}
+                      </div>
+                      <div className="family-member-info">
+                        <div className="member-name">{m.name || m.userId.split(':')[0].replace('@', '')}</div>
+                        <div className="member-role" style={{ color: FAMILY_ROLE_COLORS['sibling'] }}>Sibling/Spouse</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="generation gen-3">
+                  <div className="gen-label">Children</div>
+                  {members.filter(m => ['son', 'daughter', 'child'].some(r => r)).map((m, i) => (
+                    <div key={i} className="family-member">
+                      <div className="member-av" style={{ background: avBg(m.name||m.userId) }}>
+                        {av(m.name||m.userId)}
+                      </div>
+                      <div className="family-member-info">
+                        <div className="member-name">{m.name || m.userId.split(':')[0].replace('@', '')}</div>
+                        <div className="member-role" style={{ color: FAMILY_ROLE_COLORS['son'] }}>Child</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              // Regular Members List
+              members.map((m, i) => {
+                const role = getMemberRole(m);
+                const isCurrentUser = m.userId === myUserId();
+                return (
+                  <div key={i} className="member-row">
+                    <div className="member-av" style={{ background: avBg(m.name||m.userId) }}>
+                      {av(m.name||m.userId)}
+                    </div>
+                    <div className="member-info">
+                      <div className="member-name">{m.name || m.userId.split(':')[0].replace('@', '')}</div>
+                      <div className="member-role">{role}</div>
+                    </div>
+                    {!isCurrentUser && (
+                      <select
+                        className="member-role-select"
+                        value={role}
+                        onChange={e => handleChangeRole(m.userId, e.target.value)}
+                      >
+                        <option value="member">Member</option>
+                        <option value="moderator">Moderator</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                    )}
+                  </div>
+                );
+              })
+            )}
           </div>
         )}
 

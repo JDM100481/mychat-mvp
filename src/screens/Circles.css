@@ -85,3 +85,29 @@
 .member-info { flex: 1; }
 .member-role { font-size: 11px; color: var(--t3); text-transform: capitalize; margin-top: 2px; }
 .member-role-select { padding: 4px 6px; border: 1px solid var(--bdr); border-radius: 4px; background: var(--bg); color: var(--t1); font-size: 12px; cursor: pointer; }
+
+/* Circle Type Selector */
+.circle-type-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.type-option { padding: 16px 12px; border: 2px solid var(--bdr); border-radius: 10px; background: var(--bg); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 8px; transition: all .15s; }
+.type-option:active { transform: scale(0.98); }
+.type-option.active { border-color: var(--p); background: var(--pbg); }
+.type-icon { font-size: 28px; }
+.type-label { font-size: 13px; font-weight: 600; color: var(--t1); }
+.type-option.active .type-label { color: var(--p); }
+
+/* Family Tree */
+.family-tree { padding: 12px; display: flex; flex-direction: column; gap: 16px; }
+.generation { padding: 12px; background: var(--bg); border-radius: 10px; border-left: 4px solid var(--p); }
+.gen-label { font-size: 12px; font-weight: 700; color: var(--t3); text-transform: uppercase; margin-bottom: 8px; letter-spacing: 0.5px; }
+.gen-0 { border-left-color: #1E40AF; }
+.gen-1 { border-left-color: #3B82F6; }
+.gen-2 { border-left-color: #7C3AED; }
+.gen-3 { border-left-color: #F59E0B; }
+
+.family-member { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--bdr); }
+.family-member:last-child { border-bottom: none; }
+.family-member-info { flex: 1; }
+.family-member .member-name { font-size: 13px; font-weight: 500; color: var(--t1); }
+.family-member .member-role { font-size: 11px; margin-top: 2px; font-weight: 500; }
+
+.family-role-select { border-color: #E5E7EB; background: var(--surf); }
