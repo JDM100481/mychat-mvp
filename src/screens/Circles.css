@@ -10,7 +10,7 @@
 .cl-info { flex: 1; min-width: 0; }
 .cl-name { font-size: 14px; font-weight: 600; color: var(--t1); display: flex; align-items: center; gap: 8px; }
 .cl-plus { font-size: 9px; font-weight: 700; font-family: var(--mono); padding: 2px 8px; border-radius: 100px; background: var(--pbg); color: var(--p); }
-.cl-prev { font-size: 12px; color: var(--t3); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cl-meta { font-size: 12px; color: var(--t3); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* Circle Detail */
 .circle-detail { display: flex; flex-direction: column; height: 100%; background: var(--bg); }
@@ -30,5 +30,12 @@
 .cd-tabs { background: var(--surf); border-bottom: 1px solid var(--bdr); display: flex; flex-shrink: 0; }
 .cd-tab { flex: 1; padding: 10px 0; font-size: 13px; font-weight: 500; color: var(--t3); text-align: center; cursor: pointer; border: none; border-bottom: 2px solid transparent; background: none; font-family: var(--font); transition: all .15s; }
 .cd-tab.active { color: var(--p); border-bottom-color: var(--p); font-weight: 600; }
-.cd-body { flex: 1; display: flex; align-items: center; justify-content: center; }
-.cd-placeholder { font-size: 13px; color: var(--p); cursor: pointer; text-decoration: underline; }
+.cd-body { flex: 1; overflow-y: auto; }
+.cd-placeholder { font-size: 13px; color: var(--p); cursor: pointer; text-decoration: underline; display: flex; align-items: center; justify-content: center; height: 100%; }
+
+.members-list { padding: 12px; }
+.member-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--bdr); }
+.member-row:last-child { border-bottom: none; }
+.member-av { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 600; color: var(--t2); flex-shrink: 0; }
+.member-info { flex: 1; }
+.member-name { font-size: 14px; font-weight: 500; color: var(--t1); }
