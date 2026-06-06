@@ -321,17 +321,6 @@ export function CircleDetailScreen() {
     return memberRoles[member.userId] || 'sibling';
   }
 
-  function getGenerationLevel(role) {
-    const generations = {
-      'grandfather': 0, 'grandmother': 0,
-      'father': 1, 'mother': 1, 'uncle': 1, 'aunt': 1,
-      'sibling': 2, 'spouse': 2,
-      'son': 3, 'daughter': 3, 'cousin': 3,
-      'child': 4,
-    };
-    return generations[role] || 2;
-  }
-
   function getMembersByRole(roleNames) {
     if (!isCircleFamily()) return [];
     return members.filter(m => {
@@ -382,18 +371,6 @@ export function CircleDetailScreen() {
   function handleChangeFamilyRole(userId, newRole) {
     setMemberRoles(prev => ({ ...prev, [userId]: newRole }));
     console.log('Family role changed for', userId, 'to', newRole);
-  }
-
-  function getMemberFamilyRole(member) {
-    return memberRoles[member.userId] || 'sibling';
-  }
-
-  function getMembersByRole(roleNames) {
-    if (!isCircleFamily()) return [];
-    return members.filter(m => {
-      const role = getMemberFamilyRole(m);
-      return roleNames.includes(role);
-    });
   }
 
   return (

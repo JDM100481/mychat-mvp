@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>myCHAT Kabayan Chat App Design</title>
+  <style>
+    :root {
+      --blue:#1877f2; --blue-dark:#0b5fd3; --bg:#eef2f7; --phone:#f8fafc; --ink:#101828;
+      --muted:#667085; --line:#d0d5dd; --card:#ffffff; --green:#12b76a; --red:#f04438;
+      --shadow:0 24px 70px rgba(16,24,40,.18);
+    }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; background:linear-gradient(135deg,#f8fbff 0%,#eaf1ff 45%,#f7f9fc 100%); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif; padding:28px; }
+    .wrap { max-width:1120px; margin:0 auto; }
+    .top { display:flex; align-items:flex-end; justify-content:space-between; gap:24px; margin-bottom:22px; }
+    h1 { margin:0; font-size:34px; letter-spacing:-.055em; line-height:.95; }
+    .subtitle { color:var(--muted); margin:10px 0 0; max-width:620px; font-size:15px; line-height:1.5; }
+    .badge { border:1px solid #bfdbfe; color:var(--blue-dark); background:#eff6ff; border-radius:999px; padding:8px 12px; font-size:12px; font-weight:800; white-space:nowrap; }
+    .stage { display:grid; grid-template-columns:360px 1fr; gap:24px; align-items:stretch; }
+    .phone { width:360px; height:760px; margin:auto; border:10px solid #101828; border-radius:44px; background:var(--phone); box-shadow:var(--shadow); overflow:hidden; position:relative; }
+    .notch { position:absolute; top:8px; left:50%; transform:translateX(-50%); width:92px; height:24px; background:#101828; border-radius:999px; z-index:5; }
+    .appbar { padding:42px 16px 12px; background:var(--card); border-bottom:1px solid var(--line); }
+    .brand { display:flex; align-items:center; justify-content:space-between; }
+    .brand b { font-size:22px; letter-spacing:-.04em; }
+    .brand b span { color:var(--blue); }
+    .avatar { width:38px; height:38px; border-radius:50%; background:#dbeafe; display:grid; place-items:center; font-size:20px; }
+    .search { margin-top:12px; background:#f2f4f7; color:#98a2b3; height:38px; border-radius:14px; display:flex; align-items:center; padding:0 12px; gap:8px; font-size:13px; }
+    .chips { display:flex; gap:7px; margin-top:12px; overflow:hidden; }
+    .chip { flex:0 0 auto; border:1px solid var(--line); background:#fff; color:#667085; border-radius:999px; padding:7px 10px; font-size:12px; font-weight:700; }
+    .chip.active { background:var(--blue); color:#fff; border-color:var(--blue); }
+    .thread { height:492px; overflow:hidden; padding:12px 14px 116px; background:linear-gradient(#f8fafc,#eef4ff); }
+    .hero { background:#fff; border:1px solid #e4e7ec; border-radius:18px; padding:12px; margin-bottom:10px; }
+    .hero .k { color:var(--blue); font-size:10px; font-weight:900; text-transform:uppercase; letter-spacing:.06em; }
+    .hero h2 { margin:4px 0 5px; font-size:20px; letter-spacing:-.05em; }
+    .hero p { margin:0; color:var(--muted); font-size:11px; line-height:1.35; }
+    .row { display:flex; align-items:flex-end; gap:8px; margin:8px 0; }
+    .row.user { justify-content:flex-end; }
+    .bubble { max-width:78%; padding:11px 13px; border-radius:18px; font-size:13px; line-height:1.38; box-shadow:0 1px 0 rgba(16,24,40,.04); }
+    .bot .bubble { background:#fff; border:1px solid #e4e7ec; border-bottom-left-radius:6px; }
+    .user .bubble { background:var(--blue); color:white; border-bottom-right-radius:6px; }
+    .mini-avatar { width:25px; height:25px; border-radius:50%; background:#dbeafe; display:grid; place-items:center; font-size:13px; flex:0 0 auto; }
+    .quick { display:flex; flex-wrap:wrap; gap:7px; margin:12px 0; }
+    .quick button { border:1px solid #bfdbfe; color:var(--blue-dark); background:#eff6ff; border-radius:999px; padding:8px 10px; font-size:12px; font-weight:800; }
+    .sos-card { border:1px solid #fecaca; background:#fff5f5; color:#991b1b; border-radius:16px; padding:11px; margin-top:8px; font-size:12px; line-height:1.4; }
+    .composer { position:absolute; left:12px; right:12px; bottom:74px; background:#fff; border:1px solid #d0d5dd; border-radius:20px; padding:8px; display:flex; gap:8px; box-shadow:0 12px 30px rgba(16,24,40,.14); }
+    .composer input { flex:1; border:0; background:#f2f4f7; border-radius:14px; padding:12px; font-size:13px; outline:none; }
+    .send { width:42px; border:0; border-radius:15px; background:var(--blue); color:#fff; font-size:18px; }
+    .nav { position:absolute; left:0; right:0; bottom:0; height:64px; display:grid; grid-template-columns:repeat(5,1fr); background:#fff; border-top:1px solid var(--line); align-items:center; text-align:center; color:#98a2b3; font-size:10px; font-weight:800; }
+    .nav div { display:grid; gap:3px; justify-items:center; }
+    .nav .on { color:var(--blue); }
+    .dot { width:22px; height:22px; border-radius:9px; background:#eef2ff; display:block; }
+    .on .dot { background:#dbeafe; }
+    .diagram { display:grid; grid-template-rows:auto 1fr; gap:16px; }
+    .panel { background:rgba(255,255,255,.78); border:1px solid #dbe4f0; border-radius:28px; box-shadow:var(--shadow); padding:22px; backdrop-filter:blur(12px); }
+    .panel h3 { margin:0 0 8px; font-size:18px; letter-spacing:-.035em; }
+    .panel p { margin:0; color:var(--muted); font-size:14px; line-height:1.5; }
+    .flow { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:16px; }
+    .node { background:#fff; border:1px solid #e4e7ec; border-radius:18px; padding:15px; min-height:108px; }
+    .node b { display:flex; align-items:center; gap:8px; font-size:14px; }
+    .node span { display:block; margin-top:8px; color:var(--muted); font-size:12px; line-height:1.45; }
+    .pill { width:26px; height:26px; border-radius:9px; display:grid; place-items:center; color:#fff; font-size:13px; }
+    .blue { background:var(--blue); } .green { background:var(--green); } .red { background:var(--red); } .dark { background:#344054; }
+    .strip { margin-top:14px; border:1px dashed #bfd7ff; background:#eff6ff; color:#175cd3; border-radius:18px; padding:14px; font-size:13px; font-weight:700; line-height:1.45; }
+    .rules { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; margin-top:16px; }
+    .rule { background:#fff; border:1px solid #e4e7ec; border-radius:18px; padding:14px; }
+    .rule b { font-size:13px; } .rule p { margin-top:6px; font-size:12px; }
+    @media (max-width:900px){ body{padding:14px}.top{display:block}.badge{display:inline-block;margin-top:14px}.stage{grid-template-columns:1fr}.phone{width:min(360px,100%)}.rules{grid-template-columns:1fr}.flow{grid-template-columns:1fr} }
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <section class="top">
+      <div>
+        <h1>myCHAT + myGENE Kabayan</h1>
+        <p class="subtitle">Chat-app-first MVP design: the architecture is expressed as a real mobile conversation UI, not a generic system diagram.</p>
+      </div>
+      <div class="badge">Minimal · mobile · chat-native</div>
+    </section>
+
+    <section class="stage">
+      <div class="phone" aria-label="myCHAT Kabayan mobile chat mockup">
+        <div class="notch"></div>
+        <div class="appbar">
+          <div class="brand"><b>my<span>CHAT</span></b><div class="avatar">🇵🇭</div></div>
+          <div class="search">⌕ Ask Kabayan: salary, docs, benefits…</div>
+          <div class="chips"><div class="chip active">Kabayan</div><div class="chip">SOS</div><div class="chip">Docs</div><div class="chip">Remit</div></div>
+        </div>
+        <div class="thread">
+          <div class="hero"><div class="k">myGENE Kabayan</div><h2>Your OFW support chat</h2><p>Emergency routing, document vault, benefits guidance and family money workflows inside myCHAT.</p></div>
+          <div class="row bot"><div class="mini-avatar">🇵🇭</div><div class="bubble">Kumusta, Kabayan. What do you need help with today?</div></div>
+          <div class="quick"><button>Employer took passport</button><button>Unpaid salary</button><button>Renew OWWA</button></div>
+          <div class="row user"><div class="bubble">Unpaid salary for two months</div></div>
+          <div class="row bot"><div class="mini-avatar">🇵🇭</div><div class="bubble">Save payslips, contract and chats. I can prepare a DMW/MWO checklist.</div></div>
+        </div>
+        <form class="composer"><input value="Message Kabayan…" readonly /><button class="send">➜</button></form>
+        <div class="nav"><div><i class="dot"></i>Chats</div><div><i class="dot"></i>Circles</div><div><i class="dot"></i>＋</div><div class="on"><i class="dot"></i>myGENE</div><div><i class="dot"></i>Profile</div></div>
+      </div>
+
+      <div class="diagram">
+        <section class="panel">
+          <h3>Minimal architecture, shown as product UI</h3>
+          <p>The phone is the architecture: user input flows through the React shell, Zustand state, myGENE assistant logic, and Matrix-ready chat services while preserving a familiar messaging layout.</p>
+          <div class="flow">
+            <div class="node"><b><i class="pill blue">1</i> React chat shell</b><span>App.jsx, BottomNav and screens create the mobile frame: header, chips, message thread and composer.</span></div>
+            <div class="node"><b><i class="pill green">2</i> Zustand state</b><span>Navigation, active tab, messages, records and demo/auth mode stay in one lightweight store.</span></div>
+            <div class="node"><b><i class="pill red">3</i> Kabayan workflows</b><span>SOS, documents, benefits, remittance and country guide content are exposed as chat-first actions.</span></div>
+            <div class="node"><b><i class="pill dark">4</i> Matrix-ready services</b><span>Existing Matrix client remains the path for rooms, real messages and future backend integrations.</span></div>
+          </div>
+          <div class="strip">Design correction: keep dashboards secondary. The main surface should always read as a messenger: conversation thread + quick replies + composer.</div>
+        </section>
+        <section class="panel">
+          <h3>Chat app design rules</h3>
+          <div class="rules">
+            <div class="rule"><b>Conversation first</b><p>The center of the screen is always a message thread, not a dashboard or infographic.</p></div>
+            <div class="rule"><b>Actions as replies</b><p>SOS, Docs and Benefits appear as quick replies/cards inside chat context.</p></div>
+            <div class="rule"><b>One thumb flow</b><p>Bottom nav and composer stay fixed; primary action is always typing or tapping a prompt.</p></div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
